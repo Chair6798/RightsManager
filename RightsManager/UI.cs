@@ -60,6 +60,7 @@ namespace RightsManager
                             else
                             {
                                 RM.AddRight(selectedPlayer, right);
+                                rb[right].labelTMP.text = right + " " + (RM.HasRight(selectedPlayer, right) ? "V" : "X");
                             }
                         }, parent);
                         rb.Add(right, b);
