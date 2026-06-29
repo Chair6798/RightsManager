@@ -47,6 +47,61 @@ namespace RightsManager
             return true;
         }
     }
+    [HarmonyPatch(typeof(PlayerTumble))]
+    internal static class PlayerTumblePatch
+    {
+        [HarmonyPatch("TumbleForceRPC")]
+        [HarmonyPrefix]
+        private static bool TumbleForceRPC_Prefix(PlayerTumble __instance)
+        {
+            Player p = Lib.GetPlayer(__instance);
+            if (p==null)
+            {
+                return true;
+            }
+            if(!RM.HasRight(p, "tumble_jump"))
+            {
+                return false;
+            }
+            return true;
+        }
+        [HarmonyPatch("TumbleTorqueRPC")]
+        [HarmonyPrefix]
+        private static bool TumbleTorqueRPC_Prefix(PlayerTumble __instance)
+        {
+            Player p = Lib.GetPlayer(__instance);
+            if (p == null)
+            {
+                return true;
+            }
+            if (!RM.HasRight(p, "tumble_jump"))
+            {
+                return false;
+            }
+            return true;
+        }
+        [HarmonyPatch("TumbleRequestRPC")]
+        [HarmonyPrefix]
+        private static bool TumbleRequestRPC_Prefix(PlayerTumble __instance, bool _isTumbling)
+        {
+            Player p = Lib.GetPlayer(__instance);
+            if (p == null)
+            {
+                return true;
+            }
+            if (!RM.HasRight(p, "tumble_start")&&_isTumbling)
+            {
+                return false;
+            }
+            if (!RM.HasRight(p, "tumble_end") && !_isTumbling)
+            {
+                return false;
+            }
+            return true;
+        }
+        
+    }
+
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal static class PlayerAvatarPatch
     {
@@ -76,7 +131,7 @@ namespace RightsManager
             }
             if (!RM.HasRight(p, "health_death"))
             {
-
+                Lib.Revive(p);
                 return true;
             }
             return true;
@@ -104,11 +159,9 @@ namespace RightsManager
     [HarmonyPatch(typeof(PhysGrabObject))]
     internal static class PhysGrabObjectPatch
     {
-        [HarmonyPatch("GrabStartedRPC")]
-        [HarmonyPrefix]
-        private static bool GrabStartedRPC_Prefix(PhysGrabObject __instance, int playerPhotonID)
+        static bool CheckGrab(PhysGrabObject __instance, int playerPhotonID)
         {
-            if (__instance.GetComponent<ValuableObject>()!=null && !RM.HasRight(PhotonView.Find(playerPhotonID).Owner, "valuable_grab"))
+            if (__instance.GetComponent<ValuableObject>() != null && !RM.HasRight(PhotonView.Find(playerPhotonID).Owner, "valuable_grab"))
             {
                 return false;
             }
@@ -126,6 +179,18 @@ namespace RightsManager
             }
             return true;
         }
+        [HarmonyPatch("GrabStartedRPC")]
+        [HarmonyPrefix]
+        private static bool GrabStartedRPC_Prefix(PhysGrabObject __instance, int playerPhotonID)
+        {
+            return CheckGrab(__instance, playerPhotonID);
+        }
+        //[HarmonyPatch("GrabEndedRPC")]
+        //[HarmonyPrefix]
+        //private static bool GrabEndedRPC_Prefix(PhysGrabObject __instance, int playerPhotonID)
+        //{
+        //    return CheckGrab(__instance, playerPhotonID);
+        //}
     }
     [HarmonyPatch(typeof(GameplayManager))]
     internal static class GameplayManagerPatch
