@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -124,6 +125,16 @@ namespace RightsManager
                 return false;
             }
             return true;
+        }
+    }
+    [HarmonyPatch(typeof(GameplayManager))]
+    internal static class GameplayManagerPatch
+    {
+        [HarmonyPatch("Start")]
+        [HarmonyPostfix]
+        private static void Start_Postfix(GameplayManager __instance)
+        {
+            __instance.gameObject.AddComponent<UI>();
         }
     }
 }

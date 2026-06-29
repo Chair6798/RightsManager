@@ -6,7 +6,7 @@ namespace RightsManager
 {
     internal static class RM
     {
-        static Dictionary<Player, Collection<string>> Rights;
+        static Dictionary<Player, Collection<string>> Rights = new Dictionary<Player, Collection<string>>();
 
         internal static Collection<string> GetBaseRights()
         {

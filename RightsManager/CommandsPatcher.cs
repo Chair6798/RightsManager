@@ -18,7 +18,7 @@ namespace RightsManager
             switch (args[0])
             {
                 case "!rm":
-
+                    UI.instance.OpenList();
                     return false;
             }
             return true;
