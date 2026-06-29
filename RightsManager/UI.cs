@@ -27,6 +27,7 @@ namespace RightsManager
             rightslist = null;
             selectedPlayer = null;
             rb = new Dictionary<string, REPOButton>();
+            if (!Lib.IsAvaiable()) { return; }
             MenuAPI.AddElementToEscapeMenu(parent => MenuAPI.CreateREPOButton("Rights", OpenList, parent, new Vector2(200f, 65f)));
         }
         internal void ReloadRights()
