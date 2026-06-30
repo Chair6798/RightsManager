@@ -177,6 +177,10 @@ namespace RightsManager
             {
                 return false;
             }
+            if (__instance.GetComponent<PhysGrabHinge>() != null && !RM.HasRight(PhotonView.Find(playerPhotonID).Owner, "hinge_grab"))
+            {
+                return false;
+            }
             return true;
         }
         [HarmonyPatch("GrabStartedRPC")]
@@ -185,12 +189,12 @@ namespace RightsManager
         {
             return CheckGrab(__instance, playerPhotonID);
         }
-        //[HarmonyPatch("GrabEndedRPC")]
-        //[HarmonyPrefix]
-        //private static bool GrabEndedRPC_Prefix(PhysGrabObject __instance, int playerPhotonID)
-        //{
-        //    return CheckGrab(__instance, playerPhotonID);
-        //}
+        [HarmonyPatch("GrabEndedRPC")]
+        [HarmonyPrefix]
+        private static bool GrabEndedRPC_Prefix(PhysGrabObject __instance, int playerPhotonID)
+        {
+            return CheckGrab(__instance, playerPhotonID);
+        }
     }
     [HarmonyPatch(typeof(GameplayManager))]
     internal static class GameplayManagerPatch

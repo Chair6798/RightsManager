@@ -19,6 +19,7 @@ namespace RightsManager
             r.Add("tumble_jump");
             r.Add("tumble_grab");
             r.Add("head_grab");
+            r.Add("hinge_grab");
             r.Add("health_lose");
             r.Add("health_get");
             r.Add("health_death");
